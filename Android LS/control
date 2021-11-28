@@ -1,0 +1,12 @@
+Package: weeb.lillie.androidls
+Name: Android LS
+Version: 1.0.6
+Architecture: iphoneos-arm
+Description: Android Lockscreen on iOS
+Maintainer: Lillie
+Author: Lillie
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 13.0), com.spark.libsparkcolourpicker, preferenceloader, cy+model.iphone | cy+model.ipod
+Conflicts: moe.absolucy.lucient, moe.absolucy.lucient.trial, org.coolstar.ventana-modern, xyz.royalapps.jellyfish, hi.my.name.is.ubik.kalm, love.litten.diary, com.laughingquoll.watermelon, com.laughingquoll.watermelon.beta, com.rpgfarm.groupingaxon, com.peterdev.grupi
+Depiction: https://repo.lillieweeb001.xyz/depictions/androidls.html
+SileoDepiction: https://repo.lillieweeb001.xyz/sileodepictions/weeb.lillie.androidls/depiction.json

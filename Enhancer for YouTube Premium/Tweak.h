@@ -1,0 +1,2 @@
+@interface EnhancerforYouTubePremiumOptionsController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@end
