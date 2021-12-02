@@ -414,7 +414,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)playInApp {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM";
+    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -513,7 +513,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)audioDownloader {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM";
+    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -526,7 +526,7 @@ UIWindow *alertWindowOutDownloaded;
                 NSURLSessionConfiguration *dataConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
                 AFURLSessionManager *dataManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:dataConfiguration];
 
-                NSString *apiUrl = [NSString stringWithFormat:@"https://www.googleapis.com/youtube/v3/videos?part=snippet&id=%@&key=AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM", videoIdentifier];
+                NSString *apiUrl = [NSString stringWithFormat:@"https://www.googleapis.com/youtube/v3/videos?part=snippet&id=%@&key=AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc", videoIdentifier];
                 NSURL *dataUrl = [NSURL URLWithString:apiUrl];
                 NSURLRequest *apiRequest = [NSURLRequest requestWithURL:dataUrl];
 
@@ -643,7 +643,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)videoDownloader {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM";
+    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -656,7 +656,7 @@ UIWindow *alertWindowOutDownloaded;
                 NSURLSessionConfiguration *dataConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
                 AFURLSessionManager *dataManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:dataConfiguration];
 
-                NSString *apiUrl = [NSString stringWithFormat:@"https://www.googleapis.com/youtube/v3/videos?part=snippet&id=%@&key=AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM", videoIdentifier];
+                NSString *apiUrl = [NSString stringWithFormat:@"https://www.googleapis.com/youtube/v3/videos?part=snippet&id=%@&key=AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc", videoIdentifier];
                 NSURL *dataUrl = [NSURL URLWithString:apiUrl];
                 NSURLRequest *apiRequest = [NSURLRequest requestWithURL:dataUrl];
 
@@ -756,7 +756,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)pictureInPicture {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyD9CjNvZ-Fq4QscI-MbZe9VAA9ULU5rqcM";
+    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
 
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
     __weak AVPlayerViewController *weakPlayerViewController = playerViewController;
@@ -1046,6 +1046,11 @@ UIWindow *alertWindowOutPlayer;
 }
 %end
 %hook YTNGWatchMiniBarViewController
+- (id)miniplayerRenderer {
+    return NULL;
+}
+%end
+%hook YTWatchMiniBarViewController
 - (id)miniplayerRenderer {
     return NULL;
 }

@@ -11,5 +11,6 @@
 - (NSString *)currentVideoID;
 @end
 
-// Tweak Variables
-extern NSString *videoIdentifier;
+@interface YTUserDefaults : NSObject
+- (long long)appThemeSetting;
+@end
