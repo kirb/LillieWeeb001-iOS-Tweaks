@@ -41,7 +41,9 @@
 
 @interface SBFLockScreenDateViewController : UIViewController
 - (void)changeAndroidDateTimeLabel:(NSTimer *)timer;
-- (void)notificationsCheck:(NSTimer *)timer;
+- (void)notificationsiOS14PlusCheck:(NSTimer *)timer;
+- (void)notificationsiOS13Check:(NSTimer *)timer;
+- (BOOL)iOSCheck;
 @end
 
 // Preferences Variables

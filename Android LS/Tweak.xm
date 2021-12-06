@@ -7,6 +7,12 @@
 
 #define PreferencesFilePath [NSString stringWithFormat:@"/var/mobile/Library/Preferences/weeb.lillie.androidlsprefs.plist"]
 
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 // Preferences Variables
 
 BOOL enabled;
@@ -144,6 +150,7 @@ NCNotificationStructuredListViewController *resultOut;
 %hook SBFLockScreenDateViewController
 - (void)loadView {
     %orig();
+    BOOL iOSCheckResult = [self iOSCheck];
     // Start View
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     androidTimeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenRect.size.width, screenRect.size.height)];
@@ -210,7 +217,11 @@ NCNotificationStructuredListViewController *resultOut;
     // End View
     [self.view addSubview:androidTimeView];
     [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(changeAndroidDateTimeLabel:) userInfo:nil repeats:YES];
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(notificationsCheck:) userInfo:nil repeats:YES];
+    if (iOSCheckResult) {
+        [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(notificationsiOS14PlusCheck:) userInfo:nil repeats:YES];
+    } else {
+        [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(notificationsiOS13Check:) userInfo:nil repeats:YES];
+    }
 }
 
 %new
@@ -252,7 +263,30 @@ NCNotificationStructuredListViewController *resultOut;
 }
 
 %new
-- (void)notificationsCheck:(NSTimer *)timer {
+- (void)notificationsiOS14PlusCheck:(NSTimer *)timer {
+    BOOL visibleNotifs = [resultOut hasVisibleContent];
+    if (visibleNotifs) {
+        androidBigTimeLabel.hidden = YES;
+        androidSmallTimeLabel.hidden = NO;
+    } else {
+        if (axonVisible == 1) {
+            androidBigTimeLabel.hidden = YES;
+            androidSmallTimeLabel.hidden = NO;
+        }
+        else {
+            if (playerVisible == 1) {
+                androidBigTimeLabel.hidden = YES;
+                androidSmallTimeLabel.hidden = NO;
+            } else {
+                androidSmallTimeLabel.hidden = YES;
+                androidBigTimeLabel.hidden = NO;
+            }
+        }
+    }
+}
+
+%new
+- (void)notificationsiOS13Check:(NSTimer *)timer {
     BOOL visibleNotifs = [resultOut hasVisibleContent];
     if (visibleNotifs) {
         androidBigTimeLabel.hidden = YES;
@@ -273,18 +307,16 @@ NCNotificationStructuredListViewController *resultOut;
                 }
             });
         }
-        /* if (playerVisible == 1) {
-            androidBigTimeLabel.hidden = YES;
-            androidSmallTimeLabel.hidden = NO;
-        } else {
-            androidSmallTimeLabel.hidden = YES;
-            androidBigTimeLabel.hidden = NO;
-        } */
     }
+}
+
+%new
+- (BOOL)iOSCheck {
+    return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"14.0");
 }
 %end
 
-/* %hook MRUNowPlayingViewController
+%hook MRUNowPlayingViewController
 - (void)viewDidAppear:(BOOL)arg1 {
     %orig();
     if (self.layout != 0) {
@@ -297,7 +329,7 @@ NCNotificationStructuredListViewController *resultOut;
         playerVisible = 0;
     }
 }
-%end */
+%end
 
 %hook CSFixedFooterView
 - (void)layoutSubviews {

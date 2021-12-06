@@ -1,0 +1,12 @@
+Package: weeb.lillie.spotifyreborn
+Name: Spotify Reborn
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Add More Features To Spotify
+Maintainer: Lillie
+Author: Lillie
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 13.0)
+Conflicts: com.spos, com.twickd.luki120.perfectspotify, com.level3tjg.sposifyfix
+Depiction: https://repo.lillieweeb001.xyz/depictions/spotifyreborn.html
+SileoDepiction: https://repo.lillieweeb001.xyz/sileodepictions/weeb.lillie.spotifyreborn/depiction.json
