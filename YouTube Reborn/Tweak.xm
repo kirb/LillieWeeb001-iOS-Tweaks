@@ -1398,7 +1398,7 @@ UIWindow *alertWindowOutPlayer;
 %hook YTReelWatchPlaybackOverlayView
 - (void)layoutSubviews {
 	%orig();
-	MSHookIvar<YTQTMButton *>(self, "_cameraButton").hidden = YES;
+	MSHookIvar<YTQTMButton *>(self, "_cameraOrSearchButton").hidden = YES;
 }
 %end
 %end
@@ -1451,72 +1451,70 @@ UIWindow *alertWindowOutPlayer;
 %group gColourOptions
 %hook UIView
 - (void)setBackgroundColor:(UIColor *)color {
-    UIColor *selectedColour = hexColour();
-
-	if([self.nextResponder isKindOfClass:NSClassFromString(@"YTPivotBarView")]) {
-        color = selectedColour;
+    if([self.nextResponder isKindOfClass:NSClassFromString(@"YTPivotBarView")]) {
+        color = hexColour();
     }
 	if([self.nextResponder isKindOfClass:NSClassFromString(@"YTLinkCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YCHLiveChatTextCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTVideoDismissedView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
 	if([self.nextResponder isKindOfClass:NSClassFromString(@"YTAccountHeaderView")]) {
         color = [[UIColor blackColor] colorWithAlphaComponent:0.0];
     }
 	if([self.nextResponder isKindOfClass:NSClassFromString(@"YTFeedHeaderView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
 	if([self.nextResponder isKindOfClass:NSClassFromString(@"YTSearchView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTPlaylistHeaderView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTSlideForActionsView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTCollectionView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTAsyncCollectionView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTCollectionSeparatorView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTDrawerAvatarCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTChipCloudCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTEditSheetControllerHeader")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTCommentsHeaderView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTEngagementPanelView")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YCHLiveChatTickerViewController")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YCHLiveChatViewerEngagementCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTDonationCompanionCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YTPlaylistPanelProminentThumbnailVideoCell")]) {
-        color = selectedColour;
+        color = hexColour();
     }
-    %orig(color);
+    %orig;
 }
 - (void)layoutSubviews {
     %orig();
@@ -1527,12 +1525,10 @@ UIWindow *alertWindowOutPlayer;
 %end
 %hook YTCollectionView
 - (void)setBackgroundColor:(UIColor *)color {
-    UIColor *selectedColour = hexColour();
-
     if([self.nextResponder isKindOfClass:NSClassFromString(@"YCHLiveChatTickerCollectionViewController")]) {
         color = [[UIColor blackColor] colorWithAlphaComponent:0.0];
     } else {
-        color = selectedColour;
+        color = hexColour();
     }
     %orig;
 }
