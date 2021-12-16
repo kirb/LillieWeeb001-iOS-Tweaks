@@ -1,10 +1,21 @@
+@interface YTAppDelegate : UIResponder <UIApplicationDelegate>
+@end
+
 @interface YTSlimVideoScrollableDetailsActionsView : UIView
 @end
 
-@interface YTSlimDetailsActionView : UIView
+@interface YTFormattedStringLabel : UILabel
 @end
 
-@interface YTFormattedStringLabel : UILabel
+@interface YTQTMButton : UIButton
+@end
+
+@interface YTSlimVideoDetailsActionView : UIView
+- (instancetype)initWithSlimMetadataButtonSupportedRenderer:(id)renderer;
+@end
+
+@interface YTISlimMetadataButtonSupportedRenderers : NSObject
+- (int)rendererOneOfCase;
 @end
 
 @interface YTLocalPlaybackController : NSObject

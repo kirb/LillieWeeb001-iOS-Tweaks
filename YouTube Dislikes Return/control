@@ -1,10 +1,10 @@
 Package: weeb.lillie.youtubedislikesreturn
 Name: YouTube Dislikes Return
-Version: 1.2.0
+Version: 1.2.2
 Architecture: iphoneos-arm
 Description: Bring Back Dislikes On YouTube
 Maintainer: Lillie
-Author: Lillie, Kirb
+Author: Lillie, Kirb, PoomSmart
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 13.0)
 Conflicts: com.ps.ytsystemappearance
