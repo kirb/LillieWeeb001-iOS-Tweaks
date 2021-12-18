@@ -1,14 +1,14 @@
-#import "RebornSettingsController.h"
+#import "UnderVideoOptionsController.h"
 
-@interface RebornSettingsController ()
+@interface UnderVideoOptionsController ()
 @end
 
-@implementation RebornSettingsController
+@implementation UnderVideoOptionsController
 
 - (void)loadView {
 	[super loadView];
 
-    self.title = @"Reborn Options";
+    self.title = @"Under-Video Options";
     if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
         self.view.backgroundColor = [UIColor colorWithRed:0.949 green:0.949 blue:0.969 alpha:1.0];
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
@@ -29,7 +29,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"TabBarTableViewCell";
+    static NSString *CellIdentifier = @"UnderVideoTableViewCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
     if (cell == nil) {
@@ -44,28 +44,31 @@
             cell.textLabel.textColor = [UIColor whiteColor];
         }
         if(indexPath.row == 0) {
-            cell.textLabel.text = @"Hide Overlay 'DWN' Button";
+            cell.textLabel.text = @"Hide Like Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideRebornDWNButton = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [hideRebornDWNButton addTarget:self action:@selector(toggleHideRebornDWNButton:) forControlEvents:UIControlEventValueChanged];
-            hideRebornDWNButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideRebornDWNButton"];
-            cell.accessoryView = hideRebornDWNButton;
+            UISwitch *noLikeButton = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [noLikeButton addTarget:self action:@selector(toggleNoLikeButton:) forControlEvents:UIControlEventValueChanged];
+            noLikeButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kNoLikeButton"];
+            cell.accessoryView = noLikeButton;
+            cell.userInteractionEnabled = NO;
+            cell.textLabel.enabled = NO;
+            cell.detailTextLabel.enabled = NO;
         }
         if(indexPath.row == 1) {
-            cell.textLabel.text = @"Hide Overlay 'PIP' Button";
+            cell.textLabel.text = @"Hide Dislike Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideRebornPIPButton = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [hideRebornPIPButton addTarget:self action:@selector(toggleHideRebornPIPButton:) forControlEvents:UIControlEventValueChanged];
-            hideRebornPIPButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideRebornPIPButton"];
-            cell.accessoryView = hideRebornPIPButton;
+            UISwitch *noDislikeButton = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [noDislikeButton addTarget:self action:@selector(toggleNoDislikeButton:) forControlEvents:UIControlEventValueChanged];
+            noDislikeButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kNoDislikeButton"];
+            cell.accessoryView = noDislikeButton;
         }
         if(indexPath.row == 2) {
-            cell.textLabel.text = @"Hide Overlay 'OP' Button";
+            cell.textLabel.text = @"Hide Download Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideRebornOPButton = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [hideRebornOPButton addTarget:self action:@selector(toggleHideRebornOPButton:) forControlEvents:UIControlEventValueChanged];
-            hideRebornOPButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideRebornOPButton"];
-            cell.accessoryView = hideRebornOPButton;
+            UISwitch *noDownloadButton = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [noDownloadButton addTarget:self action:@selector(toggleNoDownloadButton:) forControlEvents:UIControlEventValueChanged];
+            noDownloadButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kNoDownloadButton"];
+            cell.accessoryView = noDownloadButton;
         }
     }
     return cell;
@@ -81,44 +84,44 @@
 
 @end
 
-@implementation RebornSettingsController(Privates)
+@implementation UnderVideoOptionsController(Privates)
 
 - (void)done {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)toggleHideRebornDWNButton:(UISwitch *)sender {
+- (void)toggleNoLikeButton:(UISwitch *)sender {
     if ([sender isOn]) {
         NSLog(@"On");
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kHideRebornDWNButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kNoLikeButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         NSLog(@"Off");
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kHideRebornDWNButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kNoLikeButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
-- (void)toggleHideRebornPIPButton:(UISwitch *)sender {
+- (void)toggleNoDislikeButton:(UISwitch *)sender {
     if ([sender isOn]) {
         NSLog(@"On");
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kHideRebornPIPButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kNoDislikeButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         NSLog(@"Off");
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kHideRebornPIPButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kNoDislikeButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
-- (void)toggleHideRebornOPButton:(UISwitch *)sender {
+- (void)toggleNoDownloadButton:(UISwitch *)sender {
     if ([sender isOn]) {
         NSLog(@"On");
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kHideRebornOPButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kNoDownloadButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         NSLog(@"Off");
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kHideRebornOPButton"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kNoDownloadButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }

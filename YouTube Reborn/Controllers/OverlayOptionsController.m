@@ -46,7 +46,7 @@
         if(indexPath.row == 0) {
             cell.textLabel.text = @"Show Status Bar In Overlay (Portrait Only)";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *showStatusBarInOverlay = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *showStatusBarInOverlay = [[UISwitch alloc] initWithFrame:CGRectZero];
             [showStatusBarInOverlay addTarget:self action:@selector(toggleShowStatusBarInOverlay:) forControlEvents:UIControlEventValueChanged];
             showStatusBarInOverlay.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kShowStatusBarInOverlay"];
             cell.accessoryView = showStatusBarInOverlay;
@@ -54,7 +54,7 @@
         if(indexPath.row == 1) {
             cell.textLabel.text = @"Hide Previous & Next Button In Overlay";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hidePreviousAndNextButtonInOverlay = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hidePreviousAndNextButtonInOverlay = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hidePreviousAndNextButtonInOverlay addTarget:self action:@selector(toggleHidePreviousAndNextButtonInOverlay:) forControlEvents:UIControlEventValueChanged];
             hidePreviousAndNextButtonInOverlay.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHidePreviousAndNextButtonInOverlay"];
             cell.accessoryView = hidePreviousAndNextButtonInOverlay;
@@ -62,7 +62,7 @@
         if(indexPath.row == 2) {
             cell.textLabel.text = @"Hide AutoPlay Switch In Overlay";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideAutoPlaySwitchInOverlay = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideAutoPlaySwitchInOverlay = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideAutoPlaySwitchInOverlay addTarget:self action:@selector(toggleHideAutoPlaySwitchInOverlay:) forControlEvents:UIControlEventValueChanged];
             hideAutoPlaySwitchInOverlay.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideAutoPlaySwitchInOverlay"];
             cell.accessoryView = hideAutoPlaySwitchInOverlay;
@@ -70,7 +70,7 @@
         if(indexPath.row == 3) {
             cell.textLabel.text = @"Hide Captions/Subtitles Button In Overlay";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideCaptionsSubtitlesButtonInOverlay = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideCaptionsSubtitlesButtonInOverlay = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideCaptionsSubtitlesButtonInOverlay addTarget:self action:@selector(toggleHideCaptionsSubtitlesButtonInOverlay:) forControlEvents:UIControlEventValueChanged];
             hideCaptionsSubtitlesButtonInOverlay.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideCaptionsSubtitlesButtonInOverlay"];
             cell.accessoryView = hideCaptionsSubtitlesButtonInOverlay;
@@ -78,7 +78,7 @@
         if(indexPath.row == 4) {
             cell.textLabel.text = @"Disable Related Videos In Overlay";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *disableRelatedVideosInOverlay = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *disableRelatedVideosInOverlay = [[UISwitch alloc] initWithFrame:CGRectZero];
             [disableRelatedVideosInOverlay addTarget:self action:@selector(toggleDisableRelatedVideosInOverlay:) forControlEvents:UIControlEventValueChanged];
             disableRelatedVideosInOverlay.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kDisableRelatedVideosInOverlay"];
             cell.accessoryView = disableRelatedVideosInOverlay;
@@ -86,7 +86,7 @@
         if(indexPath.row == 5) {
             cell.textLabel.text = @"Hide Overlay Dark Background";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideOverlayDarkBackground = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideOverlayDarkBackground = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideOverlayDarkBackground addTarget:self action:@selector(toggleHideOverlayDarkBackground:) forControlEvents:UIControlEventValueChanged];
             hideOverlayDarkBackground.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideOverlayDarkBackground"];
             cell.accessoryView = hideOverlayDarkBackground;

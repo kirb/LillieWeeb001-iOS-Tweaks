@@ -3,9 +3,7 @@ INSTALL_TARGET_PROCESSES = YouTube
 GO_EASY_ON_ME = 1
 
 ifeq ($(DEBUG),1)
-THEOS_PACKAGE_DIR_NAME = ../../../var/www/repo.lillieweeb001/beta/debs
-else
-THEOS_PACKAGE_DIR_NAME = ../../../var/www/repo.lillieweeb001/debs
+THEOS_PACKAGE_DIR_NAME = ../../../var/www/html/debs
 endif
 
 include $(THEOS)/makefiles/common.mk

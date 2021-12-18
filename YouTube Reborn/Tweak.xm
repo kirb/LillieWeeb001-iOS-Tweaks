@@ -164,6 +164,15 @@ YTMainAppVideoPlayerOverlayViewController *layoutOut;
 }
 %end
 
+YTUserDefaults *ytThemeSettings;
+
+%hook YTUserDefaults
+- (long long)appThemeSetting {
+    ytThemeSettings = self;
+    return %orig;
+}
+%end
+
 UIWindow *alertWindowOutMenu;
 UIWindow *alertWindowOutPip;
 UIWindow *alertWindowOutUrlError;
@@ -833,6 +842,98 @@ UIWindow *alertWindowOutDownloaded;
 }
 %end
 
+%hook YTSlimVideoDetailsActionView
++ (YTSlimVideoDetailsActionView *)actionViewWithSlimMetadataButtonSupportedRenderer:(YTISlimMetadataButtonSupportedRenderers *)renderer withElementsContextBlock:(id)block {
+    if ([renderer rendererOneOfCase] == 153515154) {
+        return [[%c(YTSlimVideoDetailsActionView) alloc] initWithSlimMetadataButtonSupportedRenderer:renderer];
+    }
+    return %orig;
+}
+%end
+
+%hook YTSlimVideoScrollableDetailsActionsView
+- (void)layoutSubviews {
+	%orig();
+    NSString *videoIdentifier = [playingVideoID currentVideoID];
+    long long ytDarkModeCheck = [ytThemeSettings appThemeSetting];
+    
+    YTSlimVideoDetailsActionView *dislikesActionsViews = MSHookIvar<YTSlimVideoDetailsActionView *>(self, "_dislikeActionView");
+    YTFormattedStringLabel *dislikeText = MSHookIvar<YTFormattedStringLabel *>(dislikesActionsViews, "_label");
+    
+    NSMutableParagraphStyle *dislikesAttributedStyle = [[NSMutableParagraphStyle alloc] init];
+    [dislikesAttributedStyle setAlignment:NSTextAlignmentCenter];
+    NSMutableAttributedString *dislikesAttributedString = [[NSMutableAttributedString alloc] initWithString:@"Fetching"];
+    [dislikesAttributedString addAttribute:NSParagraphStyleAttributeName value:dislikesAttributedStyle range:NSMakeRange(0, dislikesAttributedString.length)];
+    if (ytDarkModeCheck == 0 || ytDarkModeCheck == 1) {
+        if (UIScreen.mainScreen.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+            [dislikesAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, dislikesAttributedString.length)];
+        } else {
+            [dislikesAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, dislikesAttributedString.length)];
+        }
+    }
+    if (ytDarkModeCheck == 2) {
+        [dislikesAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, dislikesAttributedString.length)];
+    }
+    if (ytDarkModeCheck == 3) {
+        [dislikesAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, dislikesAttributedString.length)];
+    }
+    [dislikesAttributedString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Roboto-Regular" size:12.00] range:NSMakeRange(0, dislikesAttributedString.length)];
+    dislikeText.attributedText = dislikesAttributedString;
+
+    NSURLSessionConfiguration *dataConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager *dataManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:dataConfiguration];
+
+    NSString *apiUrl = [NSString stringWithFormat:@"https://returnyoutubedislikeapi.com/votes?videoId=%@", videoIdentifier];
+    NSURL *dataUrl = [NSURL URLWithString:apiUrl];
+    NSURLRequest *apiRequest = [NSURLRequest requestWithURL:dataUrl];
+
+    NSURLSessionDataTask *dataTask = [dataManager dataTaskWithRequest:apiRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        if (error) {
+            [dislikesAttributedString.mutableString setString:@"Failed"];
+            dislikeText.attributedText = dislikesAttributedString;
+        } else {
+            NSMutableDictionary *jsonResponse = responseObject;
+            NSString *dislikeCount = [NSString stringWithFormat:@"%@", [jsonResponse objectForKey:@"dislikes"]];
+            if (dislikeCount != NULL) {
+                NSString *dislikeCountShort;
+                if ([dislikeCount length] == 1 || [dislikeCount length] == 2 || [dislikeCount length] == 3) {
+                    dislikeCountShort = dislikeCount;
+                }
+                if ([dislikeCount length] == 4) {
+                    NSString *firstInt = [dislikeCount substringWithRange:NSMakeRange(0,1)];
+                    NSString *secondInt = [dislikeCount substringWithRange:NSMakeRange(1,1)];
+                    dislikeCountShort = [NSString stringWithFormat:@"%@.%@K", firstInt, secondInt];
+                }
+                if ([dislikeCount length] == 5) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@K", [dislikeCount substringToIndex:2]];
+                }
+                if ([dislikeCount length] == 6) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@K", [dislikeCount substringToIndex:3]];
+                }
+                if ([dislikeCount length] == 7) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@M", [dislikeCount substringToIndex:1]];
+                }
+                if ([dislikeCount length] == 8) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@M", [dislikeCount substringToIndex:2]];
+                }
+                if ([dislikeCount length] == 9) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@B", [dislikeCount substringToIndex:1]];
+                }
+                if ([dislikeCount length] == 10) {
+                    dislikeCountShort = [NSString stringWithFormat:@"%@B", [dislikeCount substringToIndex:2]];
+                }
+                [dislikesAttributedString.mutableString setString:dislikeCountShort];
+                dislikeText.attributedText = dislikesAttributedString;
+            } else {
+                [dislikesAttributedString.mutableString setString:@"Failed"];                        
+                dislikeText.attributedText = dislikesAttributedString;
+            }
+        }
+    }];
+    [dataTask resume];
+}
+%end
+
 UIWindow *alertWindowOutPlayer;
 
 %hook AVPlayerViewController
@@ -902,13 +1003,6 @@ UIWindow *alertWindowOutPlayer;
     arg1 = 0;
 	%orig;
 }
-%end
-%end
-
-%group gNoCommentsSection
-%hook YTCommentSectionControllerBuilder
-- (void)loadSectionController:(id)arg1 withModel:(id)arg2 {
-} 
 %end
 %end
 
@@ -1149,14 +1243,6 @@ UIWindow *alertWindowOutPlayer;
 %hook YTSettings
 - (BOOL)doubleTapToSeekEnabled {
     return 0;
-}
-%end
-%end
-
-%group gNoTopicsSection
-%hook YTMySubsFilterHeaderViewController
-- (id)loadChipFilterFromModel:(id)arg1 {
-    return NULL;
 }
 %end
 %end
@@ -1898,132 +1984,35 @@ UIWindow *alertWindowOutPlayer;
 %end
 %end
 
-/* %group gPictureInPicture
-%hook YTBackgroundabilityPolicy
-- (BOOL)isPlayableInPictureInPictureByUserSettings {
-    return 1;
+%group gNoLikeButton
+%hook YTSlimVideoScrollableDetailsActionsView
+- (void)layoutSubviews {
+    %orig();
+    // MSHookIvar<YTSlimVideoDetailsActionView *>(self, "_likeActionView").hidden = YES;
 }
 %end
-%hook YTPlayerPIPController
-- (BOOL)isPictureInPicturePossible {
-    return 1;
-}
-- (BOOL)canEnablePictureInPicture {
-    return 1;
-}
-- (BOOL)isPictureInPictureForceDisabled {
-    return 0;
-}
-- (void)setPictureInPictureForceDisabled:(BOOL)arg1 {
-    arg1 = 0;
-    %orig;
-}
 %end
-%hook YTPlayerResponse
-- (BOOL)isPlayableInPictureInPicture {
-    return 1;
-}
-%end
-%hook MLPIPController
-- (BOOL)pictureInPictureSupported {
-    return 1;
-}
-- (BOOL)isPictureInPictureSupported {
-    return 1;
-}
-%end
-%hook AVPictureInPictureController
-+ (BOOL)isPictureInPictureSupported {
-    return 1;
-}
-- (void)setCanStartPictureInPictureAutomaticallyFromInline:(BOOL)canStartFromInline {
-    canStartFromInline = 1;
-    %orig;
-}
-%end
-%hook YTIPlayabilityStatus
-- (BOOL)isPlayableInPictureInPicture {
-    return 1;
-}
-%end
-%end */
 
-/* %group gEnableAgeRestrictionBypass
-%hook YTUserProfile
-- (BOOL)hasLegalAge {
-    return 1;
+%group gNoDislikeButton
+%hook YTSlimVideoScrollableDetailsActionsView
+- (void)layoutSubviews {
+    %orig();
+    MSHookIvar<YTSlimVideoDetailsActionView *>(self, "_dislikeActionView").hidden = YES;
 }
 %end
-%hook YTVideo
-- (BOOL)isAdultContent {
-    return 0;
-} 
 %end
-%hook YTSettings
-- (BOOL)isAdultContentConfirmed {
-    return 1;
-}
-- (void)setAdultContentConfirmed:(BOOL)arg1 {
-    arg1 = 1;
+
+%group gAutoFullScreen
+%hook YTPlayerViewController
+- (void)playbackController:(id)arg1 didActivateVideo:(id)arg2 withPlaybackData:(id)arg3 {
     %orig;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        YTWatchController *watchController = [self valueForKey:@"_UIDelegate"];
+        [watchController showFullScreen];
+    });
 }
 %end
-%hook YTUserDefaults
-- (BOOL)isAdultContentConfirmed {
-    return 1;
-}
-- (void)setAdultContentConfirmed:(BOOL)arg1 {
-    arg1 = 1;
-    %orig;
-}
 %end
-%hook YTPlayerRequestFactory
-- (BOOL)adultContentConfirmed {
-    return 1;
-}
-%end
-%hook YTIdentityState
-- (BOOL)isChild {
-    return 0;
-}
-- (BOOL)isAdult {
-    return 1;
-}
-%end
-%hook YTIAccountItemRenderer
-- (BOOL)isChild {
-    return 0;
-}
-- (BOOL)isAdult {
-    return 1;
-}
-%end
-%hook YTIGaiaAuthenticatedIdentity
-- (BOOL)isChild {
-    return 0;
-}
-- (BOOL)isAdult {
-    return 1;
-}
-%end
-%hook YTIPlayabilityStatus
-- (BOOL)isKoreanAgeVerificationRequired {
-    return 0;
-}
-- (BOOL)isAgeCheckRequired {
-    return 0;
-}
-- (BOOL)isContentCheckRequired {
-    return 0;
-}
-- (BOOL)isMatureContentAgeVerificationRequired {
-    return 0;
-}
-- (BOOL)isConfirmationRequired {
-    return 0;
-}
-%end
-%end */
 
 %hook YTColdConfig
 - (BOOL)shouldUseAppThemeSetting {
@@ -2056,11 +2045,6 @@ UIWindow *alertWindowOutPlayer;
 }
 %end
 
-%hook YTSettingsSectionItemManager
-- (void)updatePremiumEarlyAccessSectionWithEntry:(id)arg1 {
-}
-%end
-
 %hook YTSettings
 - (BOOL)allowAudioOnlyManualQualitySelection {
     return 1;
@@ -2080,12 +2064,8 @@ UIWindow *alertWindowOutPlayer;
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kEnableNoVideoAds"] == YES) %init(gNoVideoAds);
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kEnableBackgroundPlayback"] == YES) {
-            %init(gBackgroundPlayback);
-            // %init(gPictureInPicture);
-        }
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kEnableBackgroundPlayback"] == YES) %init(gBackgroundPlayback);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoDownloadButton"] == YES) %init(gNoDownloadButton);
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoCommentsSection"] == YES) %init(gNoCommentsSection);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoCastButton"] == YES) %init(gNoCastButton);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoNotificationButton"] == YES) %init(gNoNotificationButton);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kAllowHDOnCellularData"] == YES) %init(gAllowHDOnCellularData);
@@ -2099,7 +2079,6 @@ UIWindow *alertWindowOutPlayer;
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideSubscriptionsTab"] == YES) %init(gHideSubscriptionsTab);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideLibraryTab"] == YES) %init(gHideLibraryTab);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kDisableDoubleTapToSkip"] == YES) %init(gDisableDoubleTapToSkip);
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoTopicsSection"] == YES) %init(gNoTopicsSection);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideOverlayDarkBackground"] == YES) %init(gHideOverlayDarkBackground);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHidePreviousAndNextButtonInOverlay"] == YES) %init(gHidePreviousAndNextButtonInOverlay);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kDisableVideoAutoPlay"] == YES) %init(gDisableVideoAutoPlay);
@@ -2115,6 +2094,9 @@ UIWindow *alertWindowOutPlayer;
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsDislikeButton"] == YES) %init(gHideShortsDislikeButton);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsCommentsButton"] == YES) %init(gHideShortsCommentsButton);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsShareButton"] == YES) %init(gHideShortsShareButton);
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoLikeButton"] == YES) %init(gNoLikeButton);
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kNoDislikeButton"] == YES) %init(gNoDislikeButton);
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kAutoFullScreen"] == YES) %init(gAutoFullScreen);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kEnableiPadStyleOniPhone"] == NO & [[NSUserDefaults standardUserDefaults] boolForKey:@"kShowStatusBarInOverlay"] == YES) {
             %init(gShowStatusBarInOverlay);
         }

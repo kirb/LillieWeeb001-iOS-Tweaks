@@ -46,7 +46,7 @@
         if(indexPath.row == 0) {
             cell.textLabel.text = @"Hide Camera Buton";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsCameraButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsCameraButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsCameraButton addTarget:self action:@selector(toggleHideShortsCameraButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsCameraButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsCameraButton"];
             cell.accessoryView = hideShortsCameraButton;
@@ -54,7 +54,7 @@
         if(indexPath.row == 1) {
             cell.textLabel.text = @"Hide More Actions Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsMoreActionsButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsMoreActionsButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsMoreActionsButton addTarget:self action:@selector(toggleHideShortsMoreActionsButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsMoreActionsButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsMoreActionsButton"];
             cell.accessoryView = hideShortsMoreActionsButton;
@@ -62,7 +62,7 @@
         if(indexPath.row == 2) {
             cell.textLabel.text = @"Hide Like Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsLikeButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsLikeButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsLikeButton addTarget:self action:@selector(toggleHideShortsLikeButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsLikeButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsLikeButton"];
             cell.accessoryView = hideShortsLikeButton;
@@ -70,7 +70,7 @@
         if(indexPath.row == 3) {
             cell.textLabel.text = @"Hide Dislike Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsDislikeButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsDislikeButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsDislikeButton addTarget:self action:@selector(toggleHideShortsDislikeButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsDislikeButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsDislikeButton"];
             cell.accessoryView = hideShortsDislikeButton;
@@ -78,7 +78,7 @@
         if(indexPath.row == 4) {
             cell.textLabel.text = @"Hide Comments Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsCommentsButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsCommentsButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsCommentsButton addTarget:self action:@selector(toggleHideShortsCommentsButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsCommentsButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsCommentsButton"];
             cell.accessoryView = hideShortsCommentsButton;
@@ -86,7 +86,7 @@
         if(indexPath.row == 5) {
             cell.textLabel.text = @"Hide Share Button";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideShortsShareButton = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideShortsShareButton = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideShortsShareButton addTarget:self action:@selector(toggleHideShortsShareButton:) forControlEvents:UIControlEventValueChanged];
             hideShortsShareButton.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideShortsShareButton"];
             cell.accessoryView = hideShortsShareButton;

@@ -59,7 +59,10 @@
 @property(readonly, nonatomic) UIImageView *imageView;
 @end
 
-@interface YTPlayerViewController
+@protocol YTPlaybackController
+@end
+
+@interface YTPlayerViewController : UIViewController <YTPlaybackController>
 @end
 
 @interface YTLocalPlaybackController : NSObject
@@ -85,6 +88,28 @@
 @end
 
 @interface YTReelWatchPlaybackOverlayView : UIView
+@end
+
+@interface YTFormattedStringLabel : UILabel
+@end
+
+@interface YTSlimVideoScrollableDetailsActionsView : UIView
+@end
+
+@interface YTSlimVideoDetailsActionView : UIView
+- (instancetype)initWithSlimMetadataButtonSupportedRenderer:(id)renderer;
+@end
+
+@interface YTISlimMetadataButtonSupportedRenderers : NSObject
+- (int)rendererOneOfCase;
+@end
+
+@interface YTUserDefaults : NSObject
+- (long long)appThemeSetting;
+@end
+
+@interface YTWatchController : NSObject
+- (void)showFullScreen;
 @end
 
 extern NSMutableArray *overlayButtons;

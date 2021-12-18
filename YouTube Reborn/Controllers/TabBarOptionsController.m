@@ -46,7 +46,7 @@
         if(indexPath.row == 0) {
             cell.textLabel.text = @"Hide Tab Bar Labels";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideTabBarLabels = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideTabBarLabels = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideTabBarLabels addTarget:self action:@selector(toggleHideTabBarLabels:) forControlEvents:UIControlEventValueChanged];
             hideTabBarLabels.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideTabBarLabels"];
             cell.accessoryView = hideTabBarLabels;
@@ -54,7 +54,7 @@
         if(indexPath.row == 1) {
             cell.textLabel.text = @"Hide Shorts (Explore) Tab";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideExploreTab = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideExploreTab = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideExploreTab addTarget:self action:@selector(toggleHideExploreTab:) forControlEvents:UIControlEventValueChanged];
             hideExploreTab.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideExploreTab"];
             cell.accessoryView = hideExploreTab;
@@ -62,7 +62,7 @@
         if(indexPath.row == 2) {
             cell.textLabel.text = @"Hide Create/Upload (+) Tab";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideUploadTab = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideUploadTab = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideUploadTab addTarget:self action:@selector(toggleHideUploadTab:) forControlEvents:UIControlEventValueChanged];
             hideUploadTab.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideUploadTab"];
             cell.accessoryView = hideUploadTab;
@@ -70,7 +70,7 @@
         if(indexPath.row == 3) {
             cell.textLabel.text = @"Hide Subscriptions Tab";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideSubscriptionsTab = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideSubscriptionsTab = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideSubscriptionsTab addTarget:self action:@selector(toggleHideSubscriptionsTab:) forControlEvents:UIControlEventValueChanged];
             hideSubscriptionsTab.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideSubscriptionsTab"];
             cell.accessoryView = hideSubscriptionsTab;
@@ -78,7 +78,7 @@
         if(indexPath.row == 4) {
             cell.textLabel.text = @"Hide Library Tab";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UISwitch *hideLibraryTab = [[UISwitch alloc] initWithFrame:CGRectMake(199, 8, 0, 0)];
+            UISwitch *hideLibraryTab = [[UISwitch alloc] initWithFrame:CGRectZero];
             [hideLibraryTab addTarget:self action:@selector(toggleHideLibraryTab:) forControlEvents:UIControlEventValueChanged];
             hideLibraryTab.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"kHideLibraryTab"];
             cell.accessoryView = hideLibraryTab;
