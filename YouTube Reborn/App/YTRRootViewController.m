@@ -1,7 +1,4 @@
 #import "YTRRootViewController.h"
-#import <MediaRemote/MediaRemote.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AVKit/AVKit.h>
 
 @interface YTRRootViewController ()
 @end
@@ -19,7 +16,6 @@ NSURL *URL;
 
 UIView *videoView;
 UIView *audioView;
-UIWindow *alertWindowOutPlayer;
 
 - (void)loadView {
 	[super loadView];
@@ -65,21 +61,41 @@ UIWindow *alertWindowOutPlayer;
     CGFloat topbarHeight = ([UIApplication sharedApplication].statusBarFrame.size.height + (self.navigationController.navigationBar.frame.size.height ?: 0.0));
     UITableViewCell *heightCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
 
+    // Video View
+    
+    videoView = [[UIView alloc] initWithFrame:CGRectMake(0, topbarHeight, self.view.bounds.size.width, self.view.bounds.size.height - 50)];
+    videoView.hidden = NO;
+
+    UIScrollView *videoScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topbarHeight - 50)];
+    CGRect videoTableFrame = CGRectMake(0, 0, self.view.bounds.size.width, heightCell.frame.size.height * [filePathsVideoArray count]);
+    UITableView *videoTableView = [[UITableView alloc] initWithFrame:videoTableFrame style:UITableViewStylePlain];
+    videoTableView.tag = 100;
+    videoTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    videoTableView.delegate = self;
+    videoTableView.dataSource = self;
+    videoTableView.scrollEnabled = NO;
+    [videoScrollView addSubview:videoTableView];
+    videoScrollView.contentSize = CGSizeMake(self.view.bounds.size.width, heightCell.frame.size.height * [filePathsVideoArray count] + 50);
+    [videoView addSubview:videoScrollView];
+
+    [self.view addSubview:videoView];
+    
     // Audio View
     
     audioView = [[UIView alloc] initWithFrame:CGRectMake(0, topbarHeight, self.view.bounds.size.width, self.view.bounds.size.height - 50)];
     audioView.hidden = YES;
 
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topbarHeight - 50)];
-    CGRect tableFrame = CGRectMake(0, 0, self.view.bounds.size.width, heightCell.frame.size.height * [filePathsAudioArray count]);
-    UITableView *tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.delegate = self;
-    tableView.dataSource = self;
-    tableView.scrollEnabled = NO;
-    [scrollView addSubview:tableView];
-    scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, heightCell.frame.size.height * [filePathsAudioArray count] + 50);
-    [audioView addSubview:scrollView];
+    UIScrollView *audioScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topbarHeight - 50)];
+    CGRect audioTableFrame = CGRectMake(0, 0, self.view.bounds.size.width, heightCell.frame.size.height * [filePathsAudioArray count]);
+    UITableView *audioTableView = [[UITableView alloc] initWithFrame:audioTableFrame style:UITableViewStylePlain];
+    audioTableView.tag = 101;
+    audioTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    audioTableView.delegate = self;
+    audioTableView.dataSource = self;
+    audioTableView.scrollEnabled = NO;
+    [audioScrollView addSubview:audioTableView];
+    audioScrollView.contentSize = CGSizeMake(self.view.bounds.size.width, heightCell.frame.size.height * [filePathsAudioArray count] + 50);
+    [audioView addSubview:audioScrollView];
 
     [self.view addSubview:audioView];
 
@@ -114,9 +130,11 @@ UIWindow *alertWindowOutPlayer;
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
     if (item.tag == 0) {
+        videoView.hidden = NO;
         audioView.hidden = YES;
     }
     if (item.tag == 1) {
+        videoView.hidden = YES;
         audioView.hidden = NO;
     }
 }
@@ -126,33 +144,67 @@ UIWindow *alertWindowOutPlayer;
 }
 
 - (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section {
-    return [filePathsAudioArray count];
+    if (theTableView.tag == 100) {
+        return [filePathsVideoArray count];
+    }
+    if (theTableView.tag == 101) {
+        return [filePathsAudioArray count];
+    }
+    return 0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"DownloadsTableViewCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+- (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (theTableView.tag == 100) {
+        static NSString *CellIdentifier = @"VideoDownloadsTableViewCell";
+        UITableViewCell *cell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-        cell.textLabel.adjustsFontSizeToFitWidth = true;
-        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-            cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-            cell.textLabel.textColor = [UIColor blackColor];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            cell.textLabel.adjustsFontSizeToFitWidth = true;
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+                cell.textLabel.textColor = [UIColor blackColor];
+            }
+            else {
+                cell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
+                cell.textLabel.textColor = [UIColor whiteColor];
+            }
         }
-        else {
-            cell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
-            cell.textLabel.textColor = [UIColor whiteColor];
-        }
+        cell.textLabel.text = [filePathsVideoArray objectAtIndex:indexPath.row];
+        return cell;
     }
-    cell.textLabel.text = [filePathsAudioArray objectAtIndex:indexPath.row];
-    return cell;
+    if (theTableView.tag == 101) {
+        static NSString *CellIdentifier = @"AudioDownloadsTableViewCell";
+        UITableViewCell *cell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            cell.textLabel.adjustsFontSizeToFitWidth = true;
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+                cell.textLabel.textColor = [UIColor blackColor];
+            }
+            else {
+                cell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
+                cell.textLabel.textColor = [UIColor whiteColor];
+            }
+        }
+        cell.textLabel.text = [filePathsAudioArray objectAtIndex:indexPath.row];
+        return cell;
+    }
 }
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [theTableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString *fileName = filePathsAudioArray[indexPath.row];
+    NSString *fileName;
+    if (theTableView.tag == 100) {
+        fileName = filePathsVideoArray[indexPath.row];
+    }
+    if (theTableView.tag == 101) {
+        fileName = filePathsAudioArray[indexPath.row];
+    }
     NSString *filePath = [NSString stringWithFormat:@"%@/%@", youtubeDocumentsPath, fileName];
     URL = [NSURL fileURLWithPath:filePath];
 
@@ -164,19 +216,21 @@ UIWindow *alertWindowOutPlayer;
     }
 }
 
+/* - (void)playerViewController:(AVPlayerViewController *)playerViewController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler{
+    [self presentViewController:playerViewController animated:YES completion:nil];
+} */
+
+/* - (BOOL)playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart:(AVPlayerViewController *)playerViewController {
+    return 0;
+} */
+
 @end
 
 @implementation YTRRootViewController(Privates)
 
 - (void)audioPlay {
-    MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-
-    UIWindow *alertWindowPlayer = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    alertWindowPlayer.rootViewController = [UIViewController new];
-    alertWindowPlayer.windowLevel = UIWindowLevelAlert + 1;
-    alertWindowOutPlayer = alertWindowPlayer;
-
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
+    // playerViewController = [AVPlayerViewController new];
     playerViewController.player = [AVPlayer playerWithURL:URL];
     playerViewController.allowsPictureInPicturePlayback = NO;
     if ([playerViewController respondsToSelector:@selector(setCanStartPictureInPictureAutomaticallyFromInline:)]) {
@@ -184,19 +238,12 @@ UIWindow *alertWindowOutPlayer;
     }
     [playerViewController.player play];
 
-    [alertWindowPlayer makeKeyAndVisible];
-    [alertWindowPlayer.rootViewController presentViewController:playerViewController animated:YES completion:nil];
+    [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
 - (void)videoPlay {
-    MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-        
-    UIWindow *alertWindowPlayer = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    alertWindowPlayer.rootViewController = [UIViewController new];
-    alertWindowPlayer.windowLevel = UIWindowLevelAlert + 1;
-    alertWindowOutPlayer = alertWindowPlayer;
-
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
+    // playerViewController = [AVPlayerViewController new];
     playerViewController.player = [AVPlayer playerWithURL:URL];
     playerViewController.allowsPictureInPicturePlayback = YES;
     if ([playerViewController respondsToSelector:@selector(setCanStartPictureInPictureAutomaticallyFromInline:)]) {
@@ -204,8 +251,7 @@ UIWindow *alertWindowOutPlayer;
     }
     [playerViewController.player play];
 
-    [alertWindowPlayer makeKeyAndVisible];
-    [alertWindowPlayer.rootViewController presentViewController:playerViewController animated:YES completion:nil];
+    [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
 @end

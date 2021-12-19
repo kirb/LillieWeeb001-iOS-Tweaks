@@ -1,3 +1,5 @@
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 #import <UIKit/UIKit.h>
 
 extern NSString *youtubeDocumentsPath;
@@ -9,7 +11,7 @@ extern NSMutableArray *filePathsVideoNameArray;
 extern NSMutableArray *filePathsAudioNameArray;
 extern NSURL *URL;
 
-@interface YTRRootViewController : UIViewController
+@interface YTRRootViewController : UIViewController <AVPlayerViewControllerDelegate>
 
 - (void)audioPlay;
 - (void)videoPlay;

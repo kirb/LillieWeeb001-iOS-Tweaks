@@ -6,7 +6,6 @@ include $(THEOS)/makefiles/common.mk
 APPLICATION_NAME = YouTubeRebornApp
 YouTubeRebornApp_FILES = main.m YTRAppDelegate.m YTRRootViewController.m
 YouTubeRebornApp_FRAMEWORKS = UIKit Foundation CoreGraphics CoreServices AVFoundation AVKit
-YouTubeRebornApp_PRIVATE_FRAMEWORKS = MediaRemote
 YouTubeRebornApp_CFLAGS = -fobjc-arc
 YouTubeRebornApp_CODESIGN_FLAGS = -SappEntitlements.xml
 
