@@ -16,20 +16,14 @@ NSURL *URL;
 
 UIView *videoView;
 UIView *audioView;
+UITableViewCell *videoCell;
+UITableViewCell *audioCell;
 
 - (void)loadView {
 	[super loadView];
 
 	self.title = @"YT Reborn Downloads";
-	if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-        self.view.backgroundColor = [UIColor colorWithRed:0.949 green:0.949 blue:0.969 alpha:1.0];
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-    }
-    else {
-        self.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    }
+    [self setupLightDarkModeView];
     
     LSApplicationProxy *proxy = [LSApplicationProxy applicationProxyForIdentifier:@"com.google.ios.youtube"];
     youtubeDocumentsPath = [NSString stringWithFormat:@"%@/Documents", [[proxy containerURL] path]];
@@ -70,7 +64,7 @@ UIView *audioView;
     CGRect videoTableFrame = CGRectMake(0, 0, self.view.bounds.size.width, heightCell.frame.size.height * [filePathsVideoArray count]);
     UITableView *videoTableView = [[UITableView alloc] initWithFrame:videoTableFrame style:UITableViewStylePlain];
     videoTableView.tag = 100;
-    videoTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    videoTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, videoTableView.frame.size.width, 1)];
     videoTableView.delegate = self;
     videoTableView.dataSource = self;
     videoTableView.scrollEnabled = NO;
@@ -89,7 +83,7 @@ UIView *audioView;
     CGRect audioTableFrame = CGRectMake(0, 0, self.view.bounds.size.width, heightCell.frame.size.height * [filePathsAudioArray count]);
     UITableView *audioTableView = [[UITableView alloc] initWithFrame:audioTableFrame style:UITableViewStylePlain];
     audioTableView.tag = 101;
-    audioTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    audioTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, audioTableView.frame.size.width, 1)];
     audioTableView.delegate = self;
     audioTableView.dataSource = self;
     audioTableView.scrollEnabled = NO;
@@ -156,43 +150,29 @@ UIView *audioView;
 - (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (theTableView.tag == 100) {
         static NSString *CellIdentifier = @"VideoDownloadsTableViewCell";
-        UITableViewCell *cell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        videoCell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-            cell.textLabel.adjustsFontSizeToFitWidth = true;
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-            if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-                cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-                cell.textLabel.textColor = [UIColor blackColor];
-            }
-            else {
-                cell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
-                cell.textLabel.textColor = [UIColor whiteColor];
-            }
+        if (videoCell == nil) {
+            videoCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            videoCell.textLabel.adjustsFontSizeToFitWidth = true;
+            videoCell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            [self setupLightDarkModeCell];
         }
-        cell.textLabel.text = [filePathsVideoArray objectAtIndex:indexPath.row];
-        return cell;
+        videoCell.textLabel.text = [filePathsVideoArray objectAtIndex:indexPath.row];
+        return videoCell;
     }
     if (theTableView.tag == 101) {
         static NSString *CellIdentifier = @"AudioDownloadsTableViewCell";
-        UITableViewCell *cell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        audioCell = [theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-            cell.textLabel.adjustsFontSizeToFitWidth = true;
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-            if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-                cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-                cell.textLabel.textColor = [UIColor blackColor];
-            }
-            else {
-                cell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
-                cell.textLabel.textColor = [UIColor whiteColor];
-            }
+        if (audioCell == nil) {
+            audioCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            audioCell.textLabel.adjustsFontSizeToFitWidth = true;
+            audioCell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            [self setupLightDarkModeCell];
         }
-        cell.textLabel.text = [filePathsAudioArray objectAtIndex:indexPath.row];
-        return cell;
+        audioCell.textLabel.text = [filePathsAudioArray objectAtIndex:indexPath.row];
+        return audioCell;
     }
 }
 
@@ -220,9 +200,41 @@ UIView *audioView;
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+    [self setupLightDarkModeView];
+    [self setupLightDarkModeCell];
+}
+
 @end
 
 @implementation YTRRootViewController(Privates)
+
+- (void)setupLightDarkModeView {
+    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+        self.view.backgroundColor = [UIColor colorWithRed:0.949 green:0.949 blue:0.969 alpha:1.0];
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    }
+    else {
+        self.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    }
+}
+
+- (void)setupLightDarkModeCell {
+    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+        videoCell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+        videoCell.textLabel.textColor = [UIColor blackColor];
+        audioCell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+        audioCell.textLabel.textColor = [UIColor blackColor];
+    }
+    else {
+        videoCell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
+        videoCell.textLabel.textColor = [UIColor whiteColor];
+        audioCell.backgroundColor = [UIColor colorWithRed:0.110 green:0.110 blue:0.118 alpha:1.0];
+        audioCell.textLabel.textColor = [UIColor whiteColor];
+    }
+}
 
 - (void)audioPlay {
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];

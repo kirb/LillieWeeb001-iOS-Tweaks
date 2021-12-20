@@ -13,6 +13,8 @@ extern NSURL *URL;
 
 @interface YTRRootViewController : UIViewController <AVPlayerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
 
+- (void)setupLightDarkModeView;
+- (void)setupLightDarkModeCell;
 - (void)audioPlay;
 - (void)videoPlay;
 
