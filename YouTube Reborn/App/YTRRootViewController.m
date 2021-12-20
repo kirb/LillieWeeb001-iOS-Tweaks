@@ -216,13 +216,9 @@ UIView *audioView;
     }
 }
 
-/* - (void)playerViewController:(AVPlayerViewController *)playerViewController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler{
+- (void)playerViewController:(AVPlayerViewController *)playerViewController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler{
     [self presentViewController:playerViewController animated:YES completion:nil];
-} */
-
-/* - (BOOL)playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart:(AVPlayerViewController *)playerViewController {
-    return 0;
-} */
+}
 
 @end
 
@@ -230,7 +226,7 @@ UIView *audioView;
 
 - (void)audioPlay {
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
-    // playerViewController = [AVPlayerViewController new];
+    playerViewController.delegate = self;
     playerViewController.player = [AVPlayer playerWithURL:URL];
     playerViewController.allowsPictureInPicturePlayback = NO;
     if ([playerViewController respondsToSelector:@selector(setCanStartPictureInPictureAutomaticallyFromInline:)]) {
@@ -243,7 +239,7 @@ UIView *audioView;
 
 - (void)videoPlay {
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
-    // playerViewController = [AVPlayerViewController new];
+    playerViewController.delegate = self;
     playerViewController.player = [AVPlayer playerWithURL:URL];
     playerViewController.allowsPictureInPicturePlayback = YES;
     if ([playerViewController respondsToSelector:@selector(setCanStartPictureInPictureAutomaticallyFromInline:)]) {

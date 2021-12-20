@@ -11,7 +11,7 @@ extern NSMutableArray *filePathsVideoNameArray;
 extern NSMutableArray *filePathsAudioNameArray;
 extern NSURL *URL;
 
-@interface YTRRootViewController : UIViewController <AVPlayerViewControllerDelegate>
+@interface YTRRootViewController : UIViewController <AVPlayerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
 
 - (void)audioPlay;
 - (void)videoPlay;
