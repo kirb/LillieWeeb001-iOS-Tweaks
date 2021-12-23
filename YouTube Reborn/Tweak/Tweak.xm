@@ -423,7 +423,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)playInApp {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
+    XCDYouTubeClient.innertubeApiKey = @"YourYTApiKeyHere";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -522,7 +522,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)audioDownloader {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
+    XCDYouTubeClient.innertubeApiKey = @"YourYTApiKeyHere";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -652,7 +652,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)videoDownloader {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
+    XCDYouTubeClient.innertubeApiKey = @"YourYTApiKeyHere";
 
     videoIdentifier = [playingVideoID currentVideoID];
 
@@ -765,7 +765,7 @@ UIWindow *alertWindowOutDownloaded;
 %new;
 - (void)pictureInPicture {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPause, 0);
-    XCDYouTubeClient.innertubeApiKey = @"AIzaSyAn6rSGWtyWjsoTrtDmIQJxH42d6daE_sc";
+    XCDYouTubeClient.innertubeApiKey = @"YourYTApiKeyHere";
 
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
     __weak AVPlayerViewController *weakPlayerViewController = playerViewController;
