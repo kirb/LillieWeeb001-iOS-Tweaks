@@ -70,13 +70,8 @@ YTLocalPlaybackController *playingVideoID;
         dispatch_async(dispatch_get_main_queue(), ^{
             dislikesCache[videoIdentifier] = dislikes;
 
-            // Trick to get the text centered without needing to reposition the view.
-            NSMutableParagraphStyle *dislikesAttributedStyle = [[NSMutableParagraphStyle alloc] init];
-            dislikesAttributedStyle.alignment = NSTextAlignmentCenter;
-
             NSMutableAttributedString *dislikesAttributedString = [dislikeText.attributedText mutableCopy];
             dislikesAttributedString.mutableString.string = result;
-            [dislikesAttributedString addAttribute:NSParagraphStyleAttributeName value:dislikesAttributedStyle range:NSMakeRange(0, dislikesAttributedString.length)];
             dislikeText.attributedText = dislikesAttributedString;
             [dislikesActionsViews setNeedsLayout];
         });
